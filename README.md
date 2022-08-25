@@ -60,3 +60,31 @@ To retrieve statistics of a specific LTM feature, such as a Pool, find the UID :
 >>> feature = 'pool/' + uid
 >>> data = b.get_ltm_feature_stats(feature)
 ```
+
+## Additional Features
+
+I've added a script as an example of a production script used to generate TMSH commands, instead of interacting with iControl.
+
+This can be used to simplify and document, while other API functions are under development.
+
+For example, the function to create a pool :
+
+```
+def create_pool(host,description,members,rd):
+	'''
+	create /ltm pool PL_{host}_80 {
+		description "{description}"
+		members add {
+			{name}:80 { address {ip} }
+			{name}:80 { address {ip} }
+			{name}:80 { address {ip} }
+		}
+		monitor {monitor}
+	}
+	'''
+	member_config = ' '.join([f'{member[0]}:80 {{ address {member[2]:{rd}} }}' for member in members])
+	output = f'create /ltm pool PL_{host.upper()}_80 {{ description "{description}" members add {{ {member_config} }} monitor MON_{host.upper()} }}'
+	return output
+```
+
+The function `create_pool()` can be invoked to create the necessary TMSH to enter on an F5 CLI that creates a Pool with a list of members (on port tcp/80).
