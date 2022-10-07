@@ -5,8 +5,6 @@ import json
 import time
 requests.packages.urllib3.disable_warnings()
 
-from timestamp.timestamp import timestamp
-
 class bigip(object):
 	def __init__(self, hostname):
 		self.hostname = hostname
@@ -105,7 +103,6 @@ class bigip(object):
 			print(f'[W] Received HTTP {response_raw.status_code} with message : {response_raw.text}')
 			return response_raw
 	
-	@timestamp
 	def get_ltm_features(self):
 		target_dir = '/mgmt/tm/ltm/'
 		url = f'{self.base_url}{target_dir}'
@@ -136,7 +133,6 @@ class bigip(object):
 		]
 		return ltm_features
 	
-	@timestamp
 	def get_ltm_feature(self, feature):
 		ltm_url = '/mgmt/tm/ltm/'
 		target_dir = f'{ltm_url}{feature}'
@@ -155,7 +151,6 @@ class bigip(object):
 		'''
 		return response_json
 	
-	@timestamp
 	def get_ltm_feature_stats(self, feature):
 		ltm_url = '/mgmt/tm/ltm/'
 		target_dir = f'{ltm_url}{feature}/stats'
@@ -201,7 +196,6 @@ class bigip(object):
 		response = self.delete_request(dir)
 		return response
 	
-	@timestamp
 	def get_ltm_basics(self):
 		output = {}
 		ltm_features = self.get_ltm_features()
